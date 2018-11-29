@@ -4,13 +4,14 @@
 
 #include "chrome/browser/browser_process.h"
 
+#if BUILDFLAG(ENABLE_PRINTING) 
 #include "chrome/browser/printing/print_job_manager.h"
+#endif
 #include "ui/base/l10n/l10n_util.h"
 
 BrowserProcess* g_browser_process = NULL;
 
-BrowserProcess::BrowserProcess()
-    : print_job_manager_(new printing::PrintJobManager) {
+BrowserProcess::BrowserProcess() {
   g_browser_process = this;
 }
 
@@ -27,5 +28,11 @@ std::string BrowserProcess::GetApplicationLocale() {
 }
 
 printing::PrintJobManager* BrowserProcess::print_job_manager() {
-  return print_job_manager_.get();
+  #if BUILDFLAG(ENABLE_PRINTING)
+    if (!print_job_manager_)
+      print_job_manager_.reset(new printing::PrintJobManager());
+    return print_job_manager_.get();
+  #else
+    return nullptr;
+  #endif
 }

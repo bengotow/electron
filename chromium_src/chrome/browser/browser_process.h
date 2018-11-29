@@ -14,6 +14,7 @@
 #include <string>
 
 #include "base/macros.h"
+#include "printing/buildflags/buildflags.h" 
 
 namespace printing {
 class PrintJobManager;
@@ -32,7 +33,9 @@ class BrowserProcess {
   printing::PrintJobManager* print_job_manager();
 
  private:
+#if BUILDFLAG(ENABLE_PRINTING)
   std::unique_ptr<printing::PrintJobManager> print_job_manager_;
+#endif
   std::string locale_;
 
   DISALLOW_COPY_AND_ASSIGN(BrowserProcess);

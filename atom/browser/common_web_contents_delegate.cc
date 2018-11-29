@@ -44,6 +44,12 @@
 #include "atom/browser/osr/osr_render_widget_host_view.h"
 #endif
 
+#if BUILDFLAG(ENABLE_PRINTING)
+#include "atom/browser/printing/print_preview_message_handler.h"
+#include "chrome/browser/printing/print_view_manager_basic.h"
+#include "components/printing/browser/print_manager_utils.h"
+#endif
+
 using content::BrowserThread;
 
 namespace atom {
@@ -173,8 +179,11 @@ void CommonWebContentsDelegate::InitWithWebContents(
   browser_context_ = browser_context;
   web_contents->SetDelegate(this);
 
+#if BUILDFLAG(ENABLE_PRINTING)
+  PrintPreviewMessageHandler::CreateForWebContents(web_contents);
   printing::PrintViewManagerBasic::CreateForWebContents(web_contents);
-  printing::PrintPreviewMessageHandler::CreateForWebContents(web_contents);
+  printing::CreateCompositeClientIfNeeded(web_contents);
+#endif
 
   // Determien whether the WebContents is offscreen.
   auto* web_preferences = WebContentsPreferences::From(web_contents);

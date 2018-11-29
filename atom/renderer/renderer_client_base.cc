@@ -51,6 +51,11 @@
 #include "chrome/renderer/pepper/pepper_helper.h"
 #endif  // BUILDFLAG(ENABLE_PEPPER_FLASH)
 
+#if BUILDFLAG(ENABLE_PRINTING)
+#include "atom/renderer/printing/print_render_frame_helper_delegate.h"
+#include "components/printing/renderer/print_render_frame_helper.h"
+#endif  // BUILDFLAG(ENABLE_PRINTING)
+
 namespace atom {
 
 namespace {
@@ -182,12 +187,14 @@ void RendererClientBase::RenderFrameCreated(
   new PepperHelper(render_frame);
 #endif
   new ContentSettingsObserver(render_frame);
-  new printing::PrintWebViewHelper(render_frame);
+#if BUILDFLAG(ENABLE_PRINTING) new printing::PrintRenderFrameHelper(
+      render_frame, std::make_unique <atom::PrintRenderFrameHelperDelegate>());
+#endif
 
 #if BUILDFLAG(ENABLE_PDF_VIEWER)
-  // Allow access to file scheme from pdf viewer.
-  blink::WebSecurityPolicy::AddOriginAccessWhitelistEntry(
-      GURL(kPdfViewerUIOrigin), "file", "", true);
+      // Allow access to file scheme from pdf viewer.
+      blink::WebSecurityPolicy::AddOriginAccessWhitelistEntry(
+          GURL(kPdfViewerUIOrigin), "file", "", true);
 #endif  // BUILDFLAG(ENABLE_PDF_VIEWER)
 
   content::RenderView* render_view = render_frame->GetRenderView();

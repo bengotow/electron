@@ -211,7 +211,6 @@ static_library("electron_lib") {
     "//components/net_log",
     "//components/network_session_configurator/common",
     "//components/prefs",
-    "//components/printing/common",
     "//components/viz/service",
     "//content/public/app:both",
     "//content/public/child",
@@ -222,7 +221,6 @@ static_library("electron_lib") {
     "//ppapi/host",
     "//ppapi/proxy",
     "//ppapi/shared_impl",
-    "//printing",
     "//services/proxy_resolver:lib",
     "//skia",
     "//third_party/blink/public:blink",
@@ -439,6 +437,15 @@ static_library("electron_lib") {
 
   if (enable_pepper_flash) {
     deps += [ "components/pepper_flash" ]
+  }
+
+  if (enable_basic_printing) {
+    sources += [
+      "atom/browser/printing/print_preview_message_handler.cc",
+      "atom/browser/printing/print_preview_message_handler.h",
+      "atom/renderer/printing/print_render_frame_helper_delegate.cc",
+      "atom/renderer/printing/print_render_frame_helper_delegate.h",
+    ]
   }
 
   if (enable_widevine) {
@@ -990,6 +997,13 @@ group("electron_content_manifest_overlays") {
 service_manifest("electron_content_packaged_services_manifest_overlay") {
   source = "//electron/manifests/electron_content_packaged_services_manifest_overlay.json"
   packaged_services = [ "//services/proxy_resolver:proxy_resolver_manifest" ]
+
+  if (enable_basic_printing) {
+    packaged_services += [
+      "//chrome/services/printing:manifest",
+      "//components/services/pdf_compositor:pdf_compositor_manifest",
+    ]
+  }
 }
 
 service_manifest("electron_content_browser_manifest_overlay") {
