@@ -21,7 +21,9 @@
 
 #if defined(OS_WIN)
 #include "chrome/utility/printing_handler_win.h"
-#endif
+#endif  // defined(OS_WIN)
+
+#endif  // BUILDFLAG(ENABLE_PRINTING)
 
 namespace atom {
 

@@ -10,6 +10,7 @@
 
 #include "base/compiler_specific.h"
 #include "content/public/utility/content_utility_client.h"
+#include "printing/buildflags/buildflags.h"
 
 class UtilityMessageHandler;
 

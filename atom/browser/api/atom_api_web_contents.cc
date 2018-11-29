@@ -52,8 +52,6 @@
 #include "brightray/browser/inspectable_web_contents.h"
 #include "brightray/browser/inspectable_web_contents_view.h"
 #include "chrome/browser/browser_process.h"
-#include "chrome/browser/printing/print_preview_message_handler.h"
-#include "chrome/browser/printing/print_view_manager_basic.h"
 #include "chrome/browser/ssl/security_state_tab_helper.h"
 #include "content/browser/frame_host/frame_tree_node.h"
 #include "content/browser/frame_host/render_frame_host_manager.h"
@@ -1455,7 +1453,8 @@ bool WebContents::IsDOMReady() const {
   return is_dom_ready_;
 }
 
-#if BUILDFLAG(ENABLE_PRINTING) void WebContents::Print(mate::Arguments * args) {
+#if BUILDFLAG(ENABLE_PRINTING)
+void WebContents::Print(mate::Arguments* args) {
   bool silent, print_background = false;
   base::string16 device_name;
   mate::Dictionary options = mate::Dictionary::CreateEmpty(args->isolate());

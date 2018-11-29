@@ -545,9 +545,10 @@ void AtomBrowserClient::RegisterOutOfProcessServices(
       base::BindRepeating(&l10n_util::GetStringUTF16,
                           IDS_UTILITY_PROCESS_PROXY_RESOLVER_NAME);
 
-#if BUILDFLAG(ENABLE_PRINTING)(*services)[printing::mojom::kServiceName] =
-  base::BindRepeating(&l10n_util::GetStringUTF16,
-                      IDS_UTILITY_PROCESS_PDF_COMPOSITOR_SERVICE_NAME);
+#if BUILDFLAG(ENABLE_PRINTING)
+  (*services)[printing::mojom::kServiceName] =
+      base::BindRepeating(&l10n_util::GetStringUTF16,
+                          IDS_UTILITY_PROCESS_PDF_COMPOSITOR_SERVICE_NAME);
 
   (*services)[printing::mojom::kChromePrintingServiceName] =
       base::BindRepeating(&l10n_util::GetStringUTF16,

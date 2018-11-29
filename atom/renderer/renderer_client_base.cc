@@ -19,7 +19,6 @@
 #include "base/command_line.h"
 #include "base/strings/string_split.h"
 #include "base/strings/stringprintf.h"
-#include "chrome/renderer/printing/print_web_view_helper.h"
 #include "chrome/renderer/tts_dispatcher.h"
 #include "content/public/common/content_constants.h"
 #include "content/public/common/content_switches.h"
@@ -27,6 +26,7 @@
 #include "content/public/renderer/render_view.h"
 #include "electron/buildflags/buildflags.h"
 #include "native_mate/dictionary.h"
+#include "printing/buildflags/buildflags.h"
 #include "third_party/blink/public/web/blink.h"
 #include "third_party/blink/public/web/web_custom_element.h"  // NOLINT(build/include_alpha)
 #include "third_party/blink/public/web/web_frame_widget.h"
@@ -187,14 +187,15 @@ void RendererClientBase::RenderFrameCreated(
   new PepperHelper(render_frame);
 #endif
   new ContentSettingsObserver(render_frame);
-#if BUILDFLAG(ENABLE_PRINTING) new printing::PrintRenderFrameHelper(
-      render_frame, std::make_unique <atom::PrintRenderFrameHelperDelegate>());
+#if BUILDFLAG(ENABLE_PRINTING)
+  new printing::PrintRenderFrameHelper(
+      render_frame, std::make_unique<atom::PrintRenderFrameHelperDelegate>());
 #endif
 
 #if BUILDFLAG(ENABLE_PDF_VIEWER)
-      // Allow access to file scheme from pdf viewer.
-      blink::WebSecurityPolicy::AddOriginAccessWhitelistEntry(
-          GURL(kPdfViewerUIOrigin), "file", "", true);
+  // Allow access to file scheme from pdf viewer.
+  blink::WebSecurityPolicy::AddOriginAccessWhitelistEntry(
+      GURL(kPdfViewerUIOrigin), "file", "", true);
 #endif  // BUILDFLAG(ENABLE_PDF_VIEWER)
 
   content::RenderView* render_view = render_frame->GetRenderView();
